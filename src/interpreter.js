@@ -6,6 +6,11 @@ var Interpreter = function () {
 	this.isAFact = function(sentence){
 		return (sentence.indexOf(":-") === -1);
 	}
+	
+	this.isQueryAFact = function(query){
+		 var key = this.getKeyForSentence(query);
+		 return (this.factsDictionary[key]);
+	}
 
 	this.getKeyForSentence = function(sentence){
 		return sentence.substr(0, sentence.indexOf('(')); 
@@ -31,25 +36,69 @@ var Interpreter = function () {
 				this.addSentenceToDictionary(sentence,this.rulesDictionary);
 			}
 		}
+
+		//console.log(this.factsDictionary);
+		//console.log(this.rulesDictionary);
     }
 
     this.checkFact = function(fact){
-    	//console.log(this.factsDictionary);
-		//console.log(this.rulesDictionary);
     	var key = this.getKeyForSentence(fact);
     	var factsArray = this.factsDictionary[key];
-    	console.log(key);
-    	console.log(factsArray);
-    	console.log(fact);
-    	console.log(factsArray.includes(fact));
     	return factsArray.includes(fact);
     }
 
+    this.getRuleParameters = function(rule){
+    	var ruleDefinition = rule.substr(0, rule.indexOf(':')) //f(x,y)
+		var ruleParametersString = "";
+    	var ruleParametersString = ruleDefinition.substr(ruleDefinition.indexOf('(') + 1, ruleDefinition.length);
+    	ruleParametersString = ruleParametersString.substr(0, ruleParametersString.indexOf(')'));
+    	return ruleParametersString.split(",");
+    }
+
+    this.getQueryParameters = function(query){
+
+        var queryParametersString = query.substr(query.indexOf('(') + 1, query.length);
+        queryParametersString = queryParametersString.substr(0, queryParametersString.indexOf(')'));
+    	return queryParametersString.split(",");	
+    }
+
+    this.checkRule = function(query){;
+    	var key = this.getKeyForSentence(query);
+    	var completeRule = this.rulesDictionary[key] + "";
+    	
+    	var ruleParametersVector = this.getRuleParameters(completeRule);
+    	var queryParametersVector = this.getQueryParameters(query)
+
+    	var completeQuery = completeRule + "";
+    	
+    	for (position = 0; position < ruleParametersVector.length; position++) {
+    		ruleParam = ruleParametersVector[position].trim();
+    		queryParam = queryParametersVector[position].trim();
+    		completeQuery = completeQuery.replace(new RegExp(ruleParam,"g"), queryParam);
+    	}
+    	
+    	var factsForQuery = completeQuery.substr(completeQuery.indexOf('-')+2,completeQuery.length);
+    	factsForQuery = factsForQuery.replace(new RegExp("\\),","g"), "),  ");
+    	var factsVector = factsForQuery.split("  ");
+
+    	for (position = 0; position < factsVector.length; position++) {
+    		var fact = factsVector[position];
+    		fact = fact.trim();
+    		fact = fact.substr(0,fact.indexOf(')')+1);
+    		fact = fact + "."
+    		if(!this.checkFact(fact)){
+    			return false;
+    		}
+    	}
+    	return true;
+
+    }
+
     this.checkQuery = function (query) {
-        if(this.isAFact(query)){
+        if(this.isQueryAFact(query)){
         	return this.checkFact(query + ".");
         }else{
-        	return false;
+        	return this.checkRule(query + "");
         }
     }
 
