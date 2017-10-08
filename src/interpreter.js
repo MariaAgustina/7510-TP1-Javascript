@@ -113,7 +113,6 @@ var Interpreter = function () {
     }
 
     this.checkQuery = function (query) {
-    	console.log("checkQuery");
     	if(!this.isDatabaseCorrect){
     		return false;
     	}
@@ -124,7 +123,6 @@ var Interpreter = function () {
 		}
 			  
 		if(this.isQueryAFact(query)){
-			console.log("sigue");
     		return this.checkFact(query + ".");
     	}else{
     		return this.checkRule(query + "");
