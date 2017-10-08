@@ -48,6 +48,7 @@ var Interpreter = function () {
 			var sentence =database[position];
 			var regex = new RegExp(".*\\(.*\\).")
 			if(!(regex.test(sentence))){
+				console.log("Error al parsear la base de datos en elemento: " + sentence);
 				this.isDatabaseCorrect = false;
 			}
 		}
