@@ -1,5 +1,7 @@
 //Sentence could be a fact or a rule
 var Interpreter = function () {
+	this.isDatabaseCorrect = true;
+
 	this.factsDictionary = {};
 	this.rulesDictionary = {};
 
@@ -39,6 +41,16 @@ var Interpreter = function () {
 
 		//console.log(this.factsDictionary);
 		//console.log(this.rulesDictionary);
+    }
+
+    this.validateDataBase = function(database){
+    	for (position = 0; position < database.length; position++) {
+			var sentence =database[position];
+			var regex = new RegExp(".*\\(.*\\).")
+			if(!(regex.test(sentence))){
+				this.isDatabaseCorrect = false;
+			}
+		}
     }
 
     this.checkFact = function(fact){
@@ -95,6 +107,10 @@ var Interpreter = function () {
     }
 
     this.checkQuery = function (query) {
+    	if(!this.isDatabaseCorrect){
+    		return false;
+    	}
+
         if(this.isQueryAFact(query)){
         	return this.checkFact(query + ".");
         }else{
