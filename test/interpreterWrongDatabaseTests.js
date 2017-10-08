@@ -56,8 +56,6 @@ describe("Interpreter Wrong Database", function () {
             assert(interpreter.checkQuery('padre(mario, pepe)') === false);
         });
 
-        // TODO: Add more tests
-
     });
 
     describe('Interpreter Wrong Database Rules', function () {
@@ -71,8 +69,6 @@ describe("Interpreter Wrong Database", function () {
         it('hijo(pepe, juan) should be false', function () {
             assert(interpreter.checkQuery('hijo(pepe, juan)') === false);
         });
-
-        // TODO: Add more tests
 
     });
 

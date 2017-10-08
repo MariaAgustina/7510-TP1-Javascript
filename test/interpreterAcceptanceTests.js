@@ -37,6 +37,7 @@ describe("Interpreter", function () {
     beforeEach(function () {
         // runs before each test in this block
         interpreter = new Interpreter();
+        interpreter.validateDataBase(db);
         interpreter.parseDB(db);
     });
 
@@ -67,7 +68,6 @@ describe("Interpreter", function () {
             assert(interpreter.checkQuery('padre(mario, pepe)') === false);
         });
 
-        // TODO: Add more tests
 
     });
 
@@ -82,8 +82,6 @@ describe("Interpreter", function () {
         it('hijo(pepe, juan) should be true', function () {
             assert(interpreter.checkQuery('hijo(pepe, juan)'));
         });
-
-        // TODO: Add more tests
 
     });
 
