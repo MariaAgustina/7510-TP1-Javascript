@@ -54,6 +54,11 @@ var Interpreter = function () {
 		}
     }
 
+    this.isQueryValid = function(sentence){
+    	var regex = new RegExp(".*\\(.*\\)")
+    	return (regex.test(sentence));
+    }
+
     this.checkFact = function(fact){
     	var key = this.getKeyForSentence(fact);
     	var factsArray = this.factsDictionary[key];
@@ -108,15 +113,23 @@ var Interpreter = function () {
     }
 
     this.checkQuery = function (query) {
+    	console.log("checkQuery");
     	if(!this.isDatabaseCorrect){
     		return false;
     	}
-
-        if(this.isQueryAFact(query)){
-        	return this.checkFact(query + ".");
-        }else{
-        	return this.checkRule(query + "");
-        }
+		
+		if(!this.isQueryValid(query)){ 
+			throw new Error("Query is invalid");
+			return false;
+		}
+			  
+		if(this.isQueryAFact(query)){
+			console.log("sigue");
+    		return this.checkFact(query + ".");
+    	}else{
+    		return this.checkRule(query + "");
+    	}
+		       
     }
 
 }
